@@ -7,8 +7,13 @@ import hub.forum.api.domain.topico.TopicoRepository;
 import hub.forum.api.domain.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TopicoService {
@@ -18,7 +23,7 @@ public class TopicoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<?> criarTopico(@Valid DadosNovoTopico dados) {
+    public DadosDetalhamentoTopico criarTopico(@Valid DadosNovoTopico dados) {
         var autor = usuarioRepository.findById(dados.idAutor());
         if (autor.isEmpty()) {
             throw new RuntimeException("Usuario não encontrado");
@@ -26,7 +31,10 @@ public class TopicoService {
         var topico = new Topico(dados, autor.get());
         topicoRepository.save(topico);
 
-        var dto = new DadosDetalhamentoTopico(topico);
-        return ResponseEntity.ok(dto);
+        return new DadosDetalhamentoTopico(topico);
+    }
+
+    public Page<DadosDetalhamentoTopico> listarTodosTopicos(Pageable paginacao) {
+        return topicoRepository.findAllByAtivoTrue(paginacao).map(DadosDetalhamentoTopico::new);
     }
 }

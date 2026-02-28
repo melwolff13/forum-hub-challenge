@@ -23,6 +23,7 @@ public class Topico {
     private String titulo;
     private String mensagem;
     private LocalDateTime dataCriacao;
+    private Boolean ativo;
     private Boolean estado;
     @ManyToOne
     @JoinColumn(name = "autor_id")
@@ -38,5 +39,6 @@ public class Topico {
         this.estado = true;
         this.autor = autor;
         this.curso = dados.curso();
+        this.ativo = true;
     }
 }
