@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "topicos")
@@ -27,6 +28,6 @@ public class Topico {
     private Usuario autor;
     private String curso;
     @OneToMany
-    private Resposta respostas;
+    private List<Resposta> respostas;
 
 }
