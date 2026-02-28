@@ -3,6 +3,7 @@ package hub.forum.api.domain.topico;
 import hub.forum.api.domain.resposta.Resposta;
 import hub.forum.api.domain.usuario.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -30,4 +31,12 @@ public class Topico {
     @OneToMany
     private List<Resposta> respostas;
 
+    public Topico(@Valid DadosNovoTopico dados, Usuario autor) {
+        this.titulo = dados.titulo();
+        this.mensagem = dados.mensagem();
+        this.dataCriacao = dados.dataCriacao();
+        this.estado = true;
+        this.autor = autor;
+        this.curso = dados.curso();
+    }
 }
