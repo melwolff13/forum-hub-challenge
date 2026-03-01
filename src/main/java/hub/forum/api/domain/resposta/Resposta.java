@@ -26,6 +26,23 @@ public class Resposta {
     @ManyToOne
     @JoinColumn(name = "autor_id")
     private Usuario autor;
-    private Boolean solucao;
+    private Boolean ativo;
 
+    public Resposta(DadosResposta dados, Topico topico, Usuario autor) {
+        this.mensagem = dados.mensagem();
+        this.topico = topico;
+        this.dataCriacao = dados.dataCriacao();
+        this.autor = autor;
+        this.ativo = true;
+    }
+
+    public void atualizarInformacoes(DadosAtualizacaoResposta dados) {
+        if (dados.mensagem() != null) {
+            this.mensagem = dados.mensagem();
+        }
+    }
+
+    public void deletar() {
+        this.ativo = false;
+    }
 }

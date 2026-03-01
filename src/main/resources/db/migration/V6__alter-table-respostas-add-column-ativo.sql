@@ -1,0 +1,1 @@
+alter table respostas add ativo boolean;

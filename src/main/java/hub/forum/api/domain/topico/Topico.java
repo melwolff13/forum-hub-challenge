@@ -55,4 +55,8 @@ public class Topico {
     public void deletar() {
         this.ativo = false;
     }
+
+    public void responder(Resposta resposta) {
+        this.status = Status.RESPONDIDA;
+    }
 }
