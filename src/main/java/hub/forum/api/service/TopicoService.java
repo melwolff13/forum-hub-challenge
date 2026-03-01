@@ -48,4 +48,12 @@ public class TopicoService {
 
         return new DadosDetalhamentoTopico(topico.get());
     }
+
+    public void deletarTopico(Long id) {
+        var topico = topicoRepository.findByIdAndAtivoTrue(id);
+        if (topico.isEmpty()) {
+            throw new RuntimeException("Tópico não encontrado");
+        }
+        topico.get().deletar();
+    }
 }
