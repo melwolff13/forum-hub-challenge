@@ -1,29 +1,31 @@
 package hub.forum.api.infra;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> tratarErro404(EntityNotFoundException ex) {
-        return ResponseEntity.notFound().build();
+        var erro = ex.getMessage();
+        return ResponseEntity.status(404).body(erro);
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<?> tratarErro404(SQLIntegrityConstraintViolationException ex) {
-        return ResponseEntity.notFound().build();
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> tratarErro400(MethodArgumentNotValidException ex) {
+        var erros = ex.getFieldErrors();
+        return ResponseEntity.badRequest().body(erros.stream().map(DadosErro::new));
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> tratarErro400(DataIntegrityViolationException ex) {
-        return ResponseEntity.badRequest().build();
+    private record DadosErro(String campo, String descricao) {
+        public DadosErro(FieldError erro) {
+            this(erro.getField(), erro.getDefaultMessage());
+        }
     }
 
 }

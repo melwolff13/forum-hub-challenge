@@ -2,6 +2,7 @@ package hub.forum.api.service;
 
 import hub.forum.api.domain.topico.*;
 import hub.forum.api.domain.usuario.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,8 @@ public class TopicoService {
     private UsuarioRepository usuarioRepository;
 
     public DadosDetalhamentoTopico criarTopico(@Valid DadosNovoTopico dados) {
-        var autor = usuarioRepository.getReferenceById(dados.idAutor());
+        var autor = usuarioRepository.findById(dados.idAutor())
+                .orElseThrow(() -> new EntityNotFoundException("Id não encontrado: " + dados.idAutor()));
         var topico = new Topico(dados, autor);
         topicoRepository.save(topico);
 
@@ -29,19 +31,22 @@ public class TopicoService {
     }
 
     public DadosDetalhamentoTopico detalharTopico(Long id) {
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = topicoRepository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id não encontrado: " + id));
         return new DadosDetalhamentoTopico(topico);
     }
 
     public DadosDetalhamentoTopico atualizarTopico(Long id, DadosAtualizacaoTopico dados) {
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = topicoRepository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id não encontrado: " + id));
         topico.atualizarInformacoes(dados);
 
         return new DadosDetalhamentoTopico(topico);
     }
 
     public void deletarTopico(Long id) {
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = topicoRepository.findByIdAndAtivoTrue(id)
+                .orElseThrow(() -> new EntityNotFoundException("Id não encontrado: " + id));
         topico.deletar();
     }
 
