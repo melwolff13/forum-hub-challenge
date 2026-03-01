@@ -1,5 +1,6 @@
 package hub.forum.api.controller;
 
+import hub.forum.api.domain.topico.DadosAtualizacaoTopico;
 import hub.forum.api.domain.topico.DadosDetalhamentoTopico;
 import hub.forum.api.domain.topico.DadosNovoTopico;
 import hub.forum.api.service.TopicoService;
@@ -9,9 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("topicos")
@@ -33,6 +33,12 @@ public class TopicoController {
     @GetMapping("/{id}")
     public ResponseEntity<?> detalhar(@PathVariable Long id) {
         return ResponseEntity.ok(topicoService.detalharTopico(id));
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody DadosAtualizacaoTopico dados) {
+        return ResponseEntity.ok(topicoService.atualizarTopico(id, dados));
     }
 
 }

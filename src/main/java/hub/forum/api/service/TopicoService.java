@@ -1,19 +1,12 @@
 package hub.forum.api.service;
 
-import hub.forum.api.domain.topico.DadosDetalhamentoTopico;
-import hub.forum.api.domain.topico.DadosNovoTopico;
-import hub.forum.api.domain.topico.Topico;
-import hub.forum.api.domain.topico.TopicoRepository;
+import hub.forum.api.domain.topico.*;
 import hub.forum.api.domain.usuario.UsuarioRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TopicoService {
@@ -43,6 +36,16 @@ public class TopicoService {
         if (topico.isEmpty()) {
             throw new RuntimeException("Tópico não encontrado");
         }
+        return new DadosDetalhamentoTopico(topico.get());
+    }
+
+    public DadosDetalhamentoTopico atualizarTopico(Long id, DadosAtualizacaoTopico dados) {
+        var topico = topicoRepository.findByIdAndAtivoTrue(id);
+        if (topico.isEmpty()) {
+            throw new RuntimeException("Tópico não encontrado");
+        }
+        topico.get().atualizarInformacoes(dados);
+
         return new DadosDetalhamentoTopico(topico.get());
     }
 }
