@@ -17,11 +17,8 @@ public class TopicoService {
     private UsuarioRepository usuarioRepository;
 
     public DadosDetalhamentoTopico criarTopico(@Valid DadosNovoTopico dados) {
-        var autor = usuarioRepository.findById(dados.idAutor());
-        if (autor.isEmpty()) {
-            throw new RuntimeException("Usuario não encontrado");
-        }
-        var topico = new Topico(dados, autor.get());
+        var autor = usuarioRepository.getReferenceById(dados.idAutor());
+        var topico = new Topico(dados, autor);
         topicoRepository.save(topico);
 
         return new DadosDetalhamentoTopico(topico);
@@ -32,28 +29,20 @@ public class TopicoService {
     }
 
     public DadosDetalhamentoTopico detalharTopico(Long id) {
-        var topico = topicoRepository.findByIdAndAtivoTrue(id);
-        if (topico.isEmpty()) {
-            throw new RuntimeException("Tópico não encontrado");
-        }
-        return new DadosDetalhamentoTopico(topico.get());
+        var topico = topicoRepository.getReferenceById(id);
+        return new DadosDetalhamentoTopico(topico);
     }
 
     public DadosDetalhamentoTopico atualizarTopico(Long id, DadosAtualizacaoTopico dados) {
-        var topico = topicoRepository.findByIdAndAtivoTrue(id);
-        if (topico.isEmpty()) {
-            throw new RuntimeException("Tópico não encontrado");
-        }
-        topico.get().atualizarInformacoes(dados);
+        var topico = topicoRepository.getReferenceById(id);
+        topico.atualizarInformacoes(dados);
 
-        return new DadosDetalhamentoTopico(topico.get());
+        return new DadosDetalhamentoTopico(topico);
     }
 
     public void deletarTopico(Long id) {
-        var topico = topicoRepository.findByIdAndAtivoTrue(id);
-        if (topico.isEmpty()) {
-            throw new RuntimeException("Tópico não encontrado");
-        }
-        topico.get().deletar();
+        var topico = topicoRepository.getReferenceById(id);
+        topico.deletar();
     }
+
 }
