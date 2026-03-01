@@ -37,4 +37,12 @@ public class TopicoService {
     public Page<DadosDetalhamentoTopico> listarTodosTopicos(Pageable paginacao) {
         return topicoRepository.findAllByAtivoTrue(paginacao).map(DadosDetalhamentoTopico::new);
     }
+
+    public DadosDetalhamentoTopico detalharTopico(Long id) {
+        var topico = topicoRepository.findByIdAndAtivoTrue(id);
+        if (topico.isEmpty()) {
+            throw new RuntimeException("Tópico não encontrado");
+        }
+        return new DadosDetalhamentoTopico(topico.get());
+    }
 }

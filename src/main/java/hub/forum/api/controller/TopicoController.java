@@ -30,5 +30,10 @@ public class TopicoController {
         return ResponseEntity.ok(topicoService.listarTodosTopicos(paginacao));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detalhar(@PathVariable Long id) {
+        return ResponseEntity.ok(topicoService.detalharTopico(id));
+    }
+
 }
 

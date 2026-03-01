@@ -24,7 +24,8 @@ public class Topico {
     private String mensagem;
     private LocalDateTime dataCriacao;
     private Boolean ativo;
-    private Boolean estado;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @ManyToOne
     @JoinColumn(name = "autor_id")
     private Usuario autor;
@@ -36,7 +37,7 @@ public class Topico {
         this.titulo = dados.titulo();
         this.mensagem = dados.mensagem();
         this.dataCriacao = dados.dataCriacao();
-        this.estado = true;
+        this.status = Status.NAO_RESPONDIDA;
         this.autor = autor;
         this.curso = dados.curso();
         this.ativo = true;
