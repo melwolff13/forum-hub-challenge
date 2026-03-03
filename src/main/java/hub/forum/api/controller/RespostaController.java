@@ -3,6 +3,7 @@ package hub.forum.api.controller;
 import hub.forum.api.domain.resposta.DadosAtualizacaoResposta;
 import hub.forum.api.domain.resposta.DadosDetalhamentoResposta;
 import hub.forum.api.domain.resposta.DadosResposta;
+import hub.forum.api.domain.usuario.Usuario;
 import hub.forum.api.service.RespostaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,8 +22,8 @@ public class RespostaController {
     private RespostaService respostaService;
 
     @PostMapping
-    public ResponseEntity<?> adicionar(@RequestBody @Valid DadosResposta dados) {
-        return ResponseEntity.ok(respostaService.responderTopico(dados));
+    public ResponseEntity<?> adicionar(@RequestBody @Valid DadosResposta dados, @AuthenticationPrincipal Usuario usuarioLogado) {
+        return ResponseEntity.ok(respostaService.responderTopico(dados, usuarioLogado));
     }
 
     @GetMapping("/{id}")
@@ -30,13 +32,13 @@ public class RespostaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody DadosAtualizacaoResposta dados) {
-        return ResponseEntity.ok(respostaService.atualizarResposta(id, dados));
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody DadosAtualizacaoResposta dados, @AuthenticationPrincipal Usuario usuarioLogado) {
+        return ResponseEntity.ok(respostaService.atualizarResposta(id, dados, usuarioLogado));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletar(@PathVariable Long id) {
-        respostaService.deletarResposta(id);
+    public ResponseEntity<?> deletar(@PathVariable Long id, @AuthenticationPrincipal Usuario usuarioLogado) {
+        respostaService.deletarResposta(id, usuarioLogado);
         return ResponseEntity.noContent().build();
     }
 }

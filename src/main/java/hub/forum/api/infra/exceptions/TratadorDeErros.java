@@ -1,4 +1,4 @@
-package hub.forum.api.infra;
+package hub.forum.api.infra.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,12 @@ public class TratadorDeErros {
     public ResponseEntity<?> tratarErro400(MethodArgumentNotValidException ex) {
         var erros = ex.getFieldErrors();
         return ResponseEntity.badRequest().body(erros.stream().map(DadosErro::new));
+    }
+
+    @ExceptionHandler(ValidacaoDoAutorException.class)
+    public ResponseEntity<?> tratarErroDeValidacaoDoAutor(ValidacaoDoAutorException ex) {
+        var erro = ex.getMessage();
+        return ResponseEntity.status(403).body(erro);
     }
 
     private record DadosErro(String campo, String descricao) {

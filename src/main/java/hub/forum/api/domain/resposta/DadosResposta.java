@@ -11,7 +11,5 @@ public record DadosResposta(
         @NotBlank
         String mensagem,
         @NotNull
-        LocalDateTime dataCriacao,
-        @NotNull
-        Long idAutor) {
+        LocalDateTime dataCriacao) {
 }

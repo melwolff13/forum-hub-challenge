@@ -13,7 +13,5 @@ public record DadosNovoTopico(
         @NotNull
         LocalDateTime dataCriacao,
         @NotNull
-        Long idAutor,
-        @NotNull
         String curso) {
 }
