@@ -26,6 +26,12 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
+    public Usuario(DadosNovoUsuario dados, String senhaCriptografada) {
+        this.nome = dados.nome();
+        this.email = dados.email();
+        this.senha = senhaCriptografada;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
