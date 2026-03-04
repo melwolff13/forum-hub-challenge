@@ -30,7 +30,7 @@ public class Topico {
     @JoinColumn(name = "autor_id")
     private Usuario autor;
     private String curso;
-    @OneToMany
+    @OneToMany(mappedBy = "topico")
     private List<Resposta> respostas;
 
     public Topico(@Valid DadosNovoTopico dados, Usuario autor) {
@@ -57,6 +57,8 @@ public class Topico {
     }
 
     public void responder(Resposta resposta) {
+        this.respostas.add(resposta);
+        resposta.setTopico(this);
         this.status = Status.RESPONDIDA;
     }
 }
